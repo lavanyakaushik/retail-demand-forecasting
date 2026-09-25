@@ -76,7 +76,23 @@ Ward hierarchical clustering on store sales patterns, k = 5 (silhouette 0.134):
 
 ---
 
+## Step 7 – Promo experiment design (`05_promo_experiment.ipynb`)
+
+**Question.** Step 6 showed promo lift fading through the week, so would a shorter Mon–Wed promo keep most of the sales at lower cost? This notebook designs a store-level A/B test and sizes it with historical data.
+
+**Design**
+- **Expected impact:** dropping Thu–Fri promo should cost at most **5.8%** of promo-week sales (Thu–Fri are 31% of promo-week sales).
+- **Metric:** each store vs its own last 8 promo weeks (log ratio of average daily sales), a CUPED-style adjustment that removes **~85% of the noise** (sd 0.31 → 0.04). Using sales per open day keeps stores in the test during holiday weeks.
+- **Validation:** 1,000 A/A tests on historical data gave a **3.9% false-positive rate** (target 5%) and no bias.
+- **Power:** simulated across 2–6 promo weeks and 20–50% of stores treated. **2 promo weeks with 20% of stores** detects a 2% drop 100% of the time and a 1% drop 79% of the time.
+- **Assignment:** 225 test / 890 control stores, stratified by cluster × store size (14 strata); pre-period sales within 0.3%.
+
+**Analysis plan (fixed in advance):** Welch t-test on the capped store-level metric, α = 0.05, with traffic and Saturday sales as guardrails. The test should be scheduled away from Easter, the May–June holidays, and December. Adopt Mon–Wed only if the upper bound of the sales loss is below the promo cost saved.
+
+![Experiment power](figures/experiment_power.png)
+
+--
+
 ## Coming next
-- **Step 7:** A/B test analysis (Cookie Cats)
 - **Step 8:** Safety stock and reorder points
 - **Step 9:** Tableau dashboard
