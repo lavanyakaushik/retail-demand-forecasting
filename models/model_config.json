@@ -1,0 +1,60 @@
+{
+  "features": [
+    "WeekOfYear",
+    "Month",
+    "Year",
+    "PromoDays",
+    "StateHolidayDays",
+    "SchoolHolidayDays",
+    "OpenDays",
+    "Promo2Active",
+    "NoCompetitor",
+    "LogCompDistance",
+    "CompMonthsOpen",
+    "StoreType",
+    "Assortment",
+    "Cluster",
+    "LogSalesLag52",
+    "StoreLevel"
+  ],
+  "target": "log1p(WeeklySales)",
+  "categorical": {
+    "StoreType": [
+      "a",
+      "b",
+      "c",
+      "d"
+    ],
+    "Assortment": [
+      "a",
+      "b",
+      "c"
+    ],
+    "Cluster": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  "params": {
+    "n_estimators": 800,
+    "learning_rate": 0.05,
+    "num_leaves": 63,
+    "min_child_samples": 50,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8,
+    "random_state": 42,
+    "verbose": -1
+  },
+  "trained_through": "2015-07-20",
+  "backtest_wape": {
+    "W1 Spring 2014": 0.0646,
+    "W2 Holiday 2014": 0.0648,
+    "W3 Early 2015": 0.0663,
+    "W4 Summer 2015": 0.0555,
+    "All windows": 0.0628
+  }
+}
