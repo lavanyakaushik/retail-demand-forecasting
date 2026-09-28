@@ -8,13 +8,15 @@ Built on the Kaggle Rossmann Store Sales data (1,115 German drugstores, Jan 2013
 - **SQL Server 2025 (T-SQL):** data loading, cleaning, weekly aggregation
 - **Python:** pandas, scikit-learn, LightGBM, SHAP, matplotlib
 - **Excel:** baseline forecasts (seasonal naive, FORECAST.ETS)
-- **Tableau** and **Streamlit:** in progress
+- **Tableau Public:** interactive dashboard
+- **Streamlit:** in progress
 
 ## Repository structure
 ```
 sql/          T-SQL scripts (load, clean, aggregate)
 notebooks/    01_eda, 02_clustering, 03_forecasting, 04_promo_lift,
-              05_promo_experiment, 06_inventory
+              05_promo_experiment, 06_inventory, 07_tableau_export
+tableau/      retail_dashboard.twbx and its data extracts (data/)
 excel/        baselines.xlsx
 figures/      exported charts
 models/       trained LightGBM model and config
@@ -115,7 +117,19 @@ Ward hierarchical clustering on store sales patterns, k = 5 (silhouette 0.134):
 
 ---
 
+## Step 9 – Tableau dashboard (`07_tableau_export.ipynb`)
+
+**[View the live dashboard on Tableau Public](https://public.tableau.com/views/RetailDemandForecastingInventoryPlanning_17906241946120/ForecastAccuracy)**
+
+`07_tableau_export.ipynb` writes three CSVs to `tableau/data/`, each checked against the earlier steps (WAPE 6.3% vs 11.2%, promo lift +37.1%, safety stock €9.0M vs €19.7M). The files hold sums rather than ratios, so WAPE and lift stay correct at any level of drill-down.
+
+The workbook (`tableau/retail_dashboard.twbx`) has three dashboards:
+- **Forecast Accuracy:** WAPE by cluster for LightGBM vs seasonal naive, and weekly actual vs forecast sales across the four backtest windows, filterable by cluster and store.
+- **Promo Impact:** a weekday × cluster heatmap of matched promo lift, showing the Monday-to-Friday fade and the weakest-responding clusters.
+- **Inventory Planner:** a service-level slider (80–99.5%) that updates safety stock by cluster and a store-level table of safety stock, reorder point, order-up-to level, and savings vs naive.
+
+---
+
 ## Coming next
-- **Step 9:** Tableau dashboard
 - **Step 10:** Streamlit what-if app
 - **Step 11:** Executive memo
