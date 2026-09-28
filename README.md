@@ -13,7 +13,8 @@ Built on the Kaggle Rossmann Store Sales data (1,115 German drugstores, Jan 2013
 ## Repository structure
 ```
 sql/          T-SQL scripts (load, clean, aggregate)
-notebooks/    01_eda, 02_clustering, 03_forecasting, 04_promo_lift
+notebooks/    01_eda, 02_clustering, 03_forecasting, 04_promo_lift,
+              05_promo_experiment, 06_inventory
 excel/        baselines.xlsx
 figures/      exported charts
 models/       trained LightGBM model and config
@@ -91,8 +92,30 @@ Ward hierarchical clustering on store sales patterns, k = 5 (silhouette 0.134):
 
 ![Experiment power](figures/experiment_power.png)
 
---
+---
+
+## Step 8 – Safety stock and reorder points (`06_inventory.ipynb`)
+
+**Question.** How much inventory does a better forecast save? Forecast errors from the Step 5 backtest were turned into a store-level inventory policy (weekly review, 1-week lead time, 95% service target). Rossmann reports sales in euros, not units, so inventory is measured in sales value.
+
+**Method**
+- **Error model:** bias and spread of weekly forecast error, pooled by store cluster, for LightGBM and the seasonal naive.
+- **Validation:** buffers calibrated on the first three backtest windows and tested on Summer 2015. A 95% target delivered **97.8%** actual service (slightly conservative, since calibration includes Christmas 2014). Normal and empirical-quantile methods performed almost identically, so the normal method is used.
+- **Policy:** safety stock, reorder point, and order-up-to level for all 1,115 stores, with LightGBM's slight under-forecast (+2.5%, expected from training on log sales) corrected.
+
+**Findings**
+- **Forecast error:** LightGBM cuts error spread by more than half (8.7% vs 19.2%), with none of the naive forecast's extreme misses from promo-calendar shifts.
+- **Headline:** at the same achieved service level, LightGBM needs **37% less safety stock** (54% at the same 95% target: €19.7M → €9.0M in sales value), freeing about **€6.4M of inventory at cost**, or about €1.3M a year in holding cost.
+- **Clusters:** gains are largest in promo-sensitive and Christmas-driven stores (57%) and smallest in the 8 summer/tourist stores (15%), which need the largest buffer (27% of weekly sales).
+- **Trade-off:** LightGBM could deliver 99% service with less safety stock than the naive needs for 90%; moving from 95% to 99% adds about 40% more stock.
+
+**Assumptions:** 60% cost-of-goods ratio, 20% annual holding rate, 1-week lead time and review period. Separate holiday and regular-season buffers are the next refinement.
+
+![Safety stock by service level and cluster](figures/inventory_safety_stock.png)
+
+---
 
 ## Coming next
-- **Step 8:** Safety stock and reorder points
 - **Step 9:** Tableau dashboard
+- **Step 10:** Streamlit what-if app
+- **Step 11:** Executive memo
