@@ -18,6 +18,7 @@ notebooks/    01_eda, 02_clustering, 03_forecasting, 04_promo_lift,
               05_promo_experiment, 06_inventory, 07_tableau_export
 tableau/      retail_dashboard.twbx and its data extracts (data/)
 app/          Streamlit what-if app (app.py, requirements.txt)
+reports/      executive memo (Markdown and PDF)
 excel/        baselines.xlsx
 figures/      exported charts
 models/       trained LightGBM model and config
@@ -143,5 +144,6 @@ Run locally: `pip install -r app/requirements.txt`, then `streamlit run app/app.
 
 ---
 
-## Coming next
-- **Step 11:** Executive memo
+## Step 11 – Executive memo (`reports/executive_memo.md`)
+
+A one-page summary for a retail operations director ([PDF](reports/executive_memo.pdf)): what the analysis found, three recommendations with € impact (a forecast-based replenishment pilot, the Mon–Wed promo test, and a review of low-response stores), and the key caveats.
