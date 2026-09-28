@@ -9,7 +9,7 @@ Built on the Kaggle Rossmann Store Sales data (1,115 German drugstores, Jan 2013
 - **Python:** pandas, scikit-learn, LightGBM, SHAP, matplotlib
 - **Excel:** baseline forecasts (seasonal naive, FORECAST.ETS)
 - **Tableau Public:** interactive dashboard
-- **Streamlit:** in progress
+- **Streamlit:** what-if planning app
 
 ## Repository structure
 ```
@@ -17,6 +17,7 @@ sql/          T-SQL scripts (load, clean, aggregate)
 notebooks/    01_eda, 02_clustering, 03_forecasting, 04_promo_lift,
               05_promo_experiment, 06_inventory, 07_tableau_export
 tableau/      retail_dashboard.twbx and its data extracts (data/)
+app/          Streamlit what-if app (app.py, requirements.txt)
 excel/        baselines.xlsx
 figures/      exported charts
 models/       trained LightGBM model and config
@@ -130,6 +131,17 @@ The workbook (`tableau/retail_dashboard.twbx`) has three dashboards:
 
 ---
 
+## Step 10 – Streamlit what-if app (`app/app.py`)
+
+**[Open the live app](https://rossmann-what-if.streamlit.app)**
+
+An interactive planner built on the same exports as the dashboard, so it runs without SQL Server. It adds what-if controls the dashboard can't:
+- **Promo what-if:** choose which weekdays get the promo and see the effect on Mon–Fri sales, chain-wide or for one store, using matched lift by weekday from Step 6. A Mon–Wed promo keeps about 75% of the promo sales gain with 60% of the promo days (−6.8% Mon–Fri sales), supporting the experiment designed in Step 7.
+- **Inventory what-if:** set any service level, supplier lead time, review period, cost-of-goods ratio, and holding rate. Safety stock, reorder points, and order-up-to levels update for every store, along with inventory freed and holding cost saved vs the seasonal naive. The default settings reproduce Step 8 (€9.0M vs €19.7M).
+
+Run locally: `pip install -r app/requirements.txt`, then `streamlit run app/app.py`.
+
+---
+
 ## Coming next
-- **Step 10:** Streamlit what-if app
 - **Step 11:** Executive memo
